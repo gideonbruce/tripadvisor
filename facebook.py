@@ -1,4 +1,4 @@
-import requests
+from flask import Flask, redirect, request, jsonify
 from requests_oauthlib import OAuth2Session
 from facebook import GraphAPI
 
