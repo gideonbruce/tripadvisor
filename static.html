@@ -1,1 +1,59 @@
 <!DOCTYPE html>
+
+<html>
+  <head>
+    <title>Tourism Sites Map</title>
+    <script src="https://maps.googleapis.com/maps/api/js?key=your_google_api_key&callback=initMap&libraries=places" async defer></script>
+    <script>
+      let map;
+
+      // Initialize and add the map
+      function initMap() {
+        // Center the map at a specific location (you can use dynamic user location)
+        const centerLocation = { lat: -1.2921, lng: 36.8219 }; // Example: Nairobi, Kenya
+
+        // Create a new map centered at the user's location
+        map = new google.maps.Map(document.getElementById("map"), {
+          zoom: 13,
+          center: centerLocation,
+        });
+
+        // Fetch tourism sites data from your Flask API
+        fetch("/tourism_sites?location=-1.2921,36.8219")  // Example location (Nairobi)
+          .then(response => response.json())
+          .then(data => {
+            // Loop through the tourist sites and add markers
+            data.forEach(place => {
+              const marker = new google.maps.Marker({
+                position: place.location,
+                map: map,
+                title: place.name,
+              });
+
+              // Add an info window to each marker
+              const infoWindow = new google.maps.InfoWindow({
+                content: `<h3>${place.name}</h3><p>${place.address}</p>`,
+              });
+
+              marker.addListener("click", () => {
+                infoWindow.open(map, marker);
+              });
+            });
+          });
+      }
+    </script>
+    <style>
+      #map {
+        height: 100%;
+      }
+      html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="map"></div>
+  </body>
+</html>
