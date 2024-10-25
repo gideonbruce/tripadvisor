@@ -23,3 +23,8 @@ def get_tourism_sites():
             'location': place['geometry']['location'],
             'address': place.get('vicinity', '')
         })
+
+    return jsonify(places_data)
+
+if __name__ == "__main__":
+    app.run(debug=True)
