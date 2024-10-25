@@ -31,27 +31,23 @@ def callback():
     # Fetch profile and friend list data
     return redirect(f"/get_facebook_data?access_token={access_token}")
     
-    # Step 3: Fetch the Access Token
-    facebook.fetch_token(FB_TOKEN_URL, client_secret=FB_CLIENT_SECRET, authorization_response=redirect_response)
 
-    return facebook.token['access_token']
-
-# Step 4: Use Facebook Graph API to get profile info and friend list
-def get_facebook_data(access_token):
-    # Initialize the Graph API with the access token
+@app.route("/get_facebook_data")
+def get_facebook_data():
+    access_token = request.args.get('access_token')
     graph = GraphAPI(access_token)
     
     # Fetch profile information
     profile = graph.get_object('me', fields='id,name,email')
-    print("Profile Info:", profile)
     
     # Fetch friend list
     friends = graph.get_connections('me', 'friends')
-    print("Friend List:", friends)
+    
+    # Return data as JSON
+    return jsonify({
+        "profile": profile,
+        "friends": friends
+    })
 
 if __name__ == "__main__":
-    # Perform login and get access token
-    token = facebook_login()
-
-    # Fetch profile and friend list
-    get_facebook_data(token)
+    app.run(debug=True)
