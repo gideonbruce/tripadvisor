@@ -9,13 +9,16 @@ FB_REDIRECT_URI = 'https://your-redirect-url.com/'  # Replace with your redirect
 FB_AUTH_BASE_URL = 'https://www.facebook.com/dialog/oauth'
 FB_TOKEN_URL = 'https://graph.facebook.com/v14.0/oauth/access_token'
 
-# Step 1: Facebook OAuth 2.0 Login
-def facebook_login():
-    facebook = OAuth2Session(FB_CLIENT_ID, redirect_uri=FB_REDIRECT_URI)
-    authorization_url, state = facebook.authorization_url(FB_AUTH_BASE_URL, scope=["email", "public_profile", "user_friends"])
+app = Flask(__name__)
+
+@app.route("/login")
+def login():
+    facebook = OAuth2Session(FB_CLIENT_ID, redirect_uri=FB_REDIRECT_URI, scope=["email", "public_profile", "user_friends"])
+    authorization_url, state = facebook.authorization_url(FB_AUTH_BASE_URL)
     
-    print("Visit this URL to login with Facebook:")
-    print(authorization_url)
+    # Redirect to Facebook login page
+    return redirect(authorization_url)
+
 
     # Step 2: After user logs in, they will be redirected to the redirect URI
     redirect_response = input("Paste the full redirect URL here: ")
