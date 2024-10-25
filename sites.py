@@ -14,9 +14,9 @@ def get_tourism_sites():
     location = request.args.get('location')  # Location can be passed as a query parameter
     radius = request.args.get('radius', 5000)  # Optional radius parameter in meters (default is 5km)
 
-     places_result = gmaps.places_nearby(location=location, radius=radius, type='tourist_attraction')
+    places_result = gmaps.places_nearby(location=location, radius=radius, type='tourist_attraction')
     
-     places_data = []
+    places_data = []
     for place in places_result['results']:
         places_data.append({
             'name': place['name'],
