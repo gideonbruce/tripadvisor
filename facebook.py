@@ -19,9 +19,17 @@ def login():
     # Redirect to Facebook login page
     return redirect(authorization_url)
 
-
-    # Step 2: After user logs in, they will be redirected to the redirect URI
-    redirect_response = input("Paste the full redirect URL here: ")
+@app.route("/callback")
+def callback():
+    facebook = OAuth2Session(FB_CLIENT_ID, redirect_uri=FB_REDIRECT_URI)
+    # Get the access token
+    facebook.fetch_token(FB_TOKEN_URL, client_secret=FB_CLIENT_SECRET, authorization_response=request.url)
+    
+    # Store access token for future use
+    access_token = facebook.token['access_token']
+    
+    # Fetch profile and friend list data
+    return redirect(f"/get_facebook_data?access_token={access_token}")
     
     # Step 3: Fetch the Access Token
     facebook.fetch_token(FB_TOKEN_URL, client_secret=FB_CLIENT_SECRET, authorization_response=redirect_response)
